@@ -1,0 +1,21 @@
+NOTICE: Theorem Proving in Lean Project
+
+This product includes software developed at theorem_proving_in_lean4 and its contributors.
+
+Portions of this software were derived from theorem_proving_in_lean4 located at https://github.com/leanprover/theorem_proving_in_lean4. Specifically, demonstrations of Lean 4 code were partially copied into the "TheoremProvingInLean/*.lean" files of this repository.
+
+The original source code from theorem_proving_in_lean4 is licensed under the Apache License 2.0. A copy of the Apache License 2.0 can be found in the LICENSE file at the root of this repository or at [http://www.apache.org/licenses/LICENSE-2.0].
+
+Modifications and additions to the original Lean 4 demonstrations, including solutions to exercises and new theorem proofs, were made by Matteo Gätzner and are also distributed under the Apache License 2.0.
+
+For a detailed list of changes and contributions made to the original source code, please refer to the documentation accompanying this project or specific annotations within the code files.
+
+ACKNOWLEDGMENTS:
+
+We would like to acknowledge the contributors of theorem_proving_in_lean4 for their work, which has greatly facilitated the development of this project.
+
+NOTICE:
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This notice may not remove or alter any copyright notices or other proprietary legends contained within the original software.
