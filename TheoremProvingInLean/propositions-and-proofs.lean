@@ -424,3 +424,65 @@ example : (p → q) → (¬q → ¬p) :=
   fun hpq : p → q => 
     fun hnq : q → False => 
       fun hp : p => hnq (hpq hp)
+
+-- Proofs requiring classical logic (Law of Excluded Middle)
+open Classical
+
+variable (p q r : Prop)
+
+example : (p → q ∨ r) → ((p → q) ∨ (p → r)) := 
+  (fun hpqr : p → q ∨ r => 
+    Or.elim (em p)
+      (fun hp : p => 
+        have hqr : q ∨ r := hpqr hp
+        Or.elim hqr 
+          (fun hq : q => Or.inl (fun _ : p => hq))
+          (fun hr : r => Or.inr (fun _ : p => hr)))
+      (fun hnp : ¬p =>
+        Or.inl (fun hp : p => absurd hp hnp)))
+example : ¬(p ∧ q) → ¬p ∨ ¬q := 
+  (fun hnpq : p ∧ q → False =>
+    (Or.elim (em p)
+      (fun hp : p =>
+        Or.elim (em q)
+          (fun hq : q => False.elim (hnpq ⟨hp, hq⟩))
+          (fun nhq : ¬q => Or.inr nhq)))
+      (fun hnp : ¬p => Or.inl hnp))
+example : ¬(p → q) → p ∧ ¬q := 
+  (fun hnpq : (p → q) → False => 
+    Or.elim (em p)
+    (fun hp : p =>
+      Or.elim (em q)
+        (fun hq : q =>
+          False.elim (hnpq (fun _ : p => hq)))
+        (fun nhq : ¬q => 
+          ⟨hp, nhq⟩))
+    (fun hnp : ¬p =>
+      False.elim (hnpq (fun hp : p => absurd hp hnp))))
+example : (p → q) → (¬p ∨ q) := 
+  fun hpq : p → q => 
+    Or.elim (em p)
+      (fun hp : p => Or.inr (hpq hp))
+      (fun hnp : ¬p => Or.inl hnp)
+example : (¬q → ¬p) → (p → q) := 
+  fun hnqnp : (¬q → ¬p) => 
+    Or.elim (em q)
+      (fun hq : q => (fun _ => hq))
+      (fun hnq : ¬q => 
+        have hnp : ¬p := hnqnp hnq
+        fun hp : p => absurd hp hnp)
+example : p ∨ ¬p := 
+  em p
+example : (((p → q) → p) → p) := 
+  fun hpqp : (p → q) → p =>
+    (Or.elim (em p) 
+      (fun hp : p => hp)
+      (fun hnp : ¬p => 
+          hpqp (fun hp : p => absurd hp hnp)))
+example : ¬(p ↔ ¬p) :=
+  fun hpnp : p ↔ ¬p =>
+    have p_imp_np : p → ¬p := hpnp.mp
+    have np_imp_p : ¬p → p := hpnp.mpr
+    have p_eq_np := propext hpnp
+    have n_p_and_nq : ¬(p ∧ ¬p) := (fun h : p ∧ ¬p => h.right h.left)
+    sorry
