@@ -1,4 +1,4 @@
 import «TheoremProvingInLean»
 
-def main : IO Unit :=
-  IO.println s!"Hello, {hello}!"
+def main : IO Unit := 
+  IO.println s!"All proofs are correct."
