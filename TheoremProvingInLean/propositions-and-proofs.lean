@@ -479,10 +479,8 @@ example : (((p → q) → p) → p) :=
       (fun hp : p => hp)
       (fun hnp : ¬p => 
           hpqp (fun hp : p => absurd hp hnp)))
+
 example : ¬(p ↔ ¬p) :=
   fun hpnp : p ↔ ¬p =>
-    have p_imp_np : p → ¬p := hpnp.mp
-    have np_imp_p : ¬p → p := hpnp.mpr
-    have p_eq_np := propext hpnp
-    have n_p_and_nq : ¬(p ∧ ¬p) := (fun h : p ∧ ¬p => h.right h.left)
-    sorry
+    have hnp : ¬p := fun hp : p => (hpnp.mp hp) hp
+    hnp (hpnp.mpr hnp)

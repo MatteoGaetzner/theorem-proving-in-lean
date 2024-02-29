@@ -10,3 +10,5 @@ lean_lib «TheoremProvingInLean» where
 @[default_target]
 lean_exe «theorem-proving-in-lean» where
   root := `Main
+
+require mathlib from git "https://github.com/leanprover-community/mathlib4"
