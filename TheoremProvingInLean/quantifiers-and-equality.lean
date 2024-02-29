@@ -420,16 +420,90 @@ variable (r : Prop)
 example : (∃ _x : α, r) → r := 
   fun h => Exists.elim h fun _x => fun hx => hx
   
-example (a : α) : r → (∃ x : α, r) := sorry
-example : (∃ x, p x ∧ r) ↔ (∃ x, p x) ∧ r := sorry
-example : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ (∃ x, q x) := sorry
+example (a : α) : r → (∃ _x : α, r) := 
+  fun hr => ⟨a, hr⟩
 
-example : (∀ x, p x) ↔ ¬ (∃ x, ¬ p x) := sorry
-example : (∃ x, p x) ↔ ¬ (∀ x, ¬ p x) := sorry
-example : (¬ ∃ x, p x) ↔ (∀ x, ¬ p x) := sorry
-example : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := sorry
+example : (∃ x, p x ∧ r) ↔ (∃ x, p x) ∧ r := 
+  Iff.intro 
+    (fun ⟨x, hx⟩ => ⟨⟨x, hx.left⟩, hx.right⟩)
+    (fun ⟨⟨x, hx⟩, hr⟩ => ⟨x, ⟨hx, hr⟩⟩)
 
-example : (∀ x, p x → r) ↔ (∃ x, p x) → r := sorry
-example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := sorry
-example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := sorry
+example : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ (∃ x, q x) := 
+  Iff.intro 
+    (fun ⟨x, hx⟩ => hx.elim 
+      (fun hpx => Or.inl ⟨x, hpx⟩) 
+      (fun hqx => Or.inr ⟨x, hqx⟩))
+    (fun hor => hor.elim 
+      (fun ⟨x, hpx⟩ => ⟨x, Or.inl hpx⟩)
+      (fun ⟨x, hqx⟩ => ⟨x, Or.inr hqx⟩))
 
+example : (∀ x, p x) ↔ ¬ (∃ x, ¬ p x) := 
+  Iff.intro 
+    (fun hp => fun ⟨x, hnpx⟩ => hnpx (hp x))
+    (fun h_no_ex => fun x => 
+      Or.elim (em (p x))
+        (fun hpx => hpx)
+        (fun hnpx => absurd ⟨x, hnpx⟩ h_no_ex))
+
+example : (∃ x, p x) ↔ ¬ (∀ x, ¬ p x) := 
+  Iff.intro 
+    (fun ⟨x, hpx⟩ => fun hnp => (hnp x) hpx)
+    (fun h_n_fa_npx => Or.elim (em (∃ x, p x))
+      (fun hp => hp)
+      (fun hnp => 
+        have h_fa_npx : ∀ x, ¬ p x := 
+          (fun x => fun hpx => absurd ⟨x, hpx⟩ hnp)
+        absurd h_fa_npx h_n_fa_npx))
+
+example : (¬ ∃ x, p x) ↔ (∀ x, ¬ p x) := 
+  Iff.intro 
+    (fun h_n_ex_px => fun x => fun hpx => absurd ⟨x, hpx⟩ h_n_ex_px )
+    (fun h_fa_npx => fun ⟨x, hpx⟩ => absurd hpx (h_fa_npx x))
+
+theorem nfa_iff_exn : (¬ ∀ x, p x) ↔ (∃ x, ¬ p x) := 
+  Iff.intro 
+    (fun h_nfa_px : ¬ ∀ x, p x => byContradiction 
+      (fun h_nex_np : ¬ ∃ x, ¬ p x =>
+        have h_fa_px : ∀ x, p x := 
+          (fun hx => byContradiction 
+            (fun hpx : ¬p hx => h_nex_np ⟨hx, hpx⟩))
+        absurd h_fa_px h_nfa_px))
+    (fun ⟨x, hnpx⟩ => 
+      fun h_fa_px : ∀ x, p x => 
+        absurd (h_fa_px x) hnpx)
+
+example : (∀ x, p x → r) ↔ (∃ x, p x) → r := 
+  Iff.intro 
+    (fun h_x_px_imp_r : ∀ x, p x → r => 
+      fun ⟨x, hpx⟩ => (h_x_px_imp_r x) hpx)
+    (fun h_ex_x_px_imp_r : (∃ x, p x) → r => 
+      fun x => fun hpx => h_ex_x_px_imp_r ⟨x, hpx⟩)
+
+example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r := 
+  Iff.intro 
+    (fun ⟨x_ex, h_px_imp_r⟩ => fun h_fa_px => 
+      have hp_x_ex := h_fa_px x_ex
+      h_px_imp_r hp_x_ex
+    )
+    (fun h_fa_imp_r => Or.elim (em (∀ x, p x)) 
+      (fun h_fa_px => 
+        have hr := h_fa_imp_r h_fa_px
+        ⟨a, fun _x => hr⟩
+      )
+      (fun h_nfa_px => 
+        have hnp : ∃ x, ¬p x := (nfa_iff_exn α p).mp h_nfa_px 
+        let ⟨x, hnpx⟩ := hnp
+        ⟨x, fun hpx => absurd hpx hnpx⟩
+      )
+    )
+
+example (a : α) : (∃ x, r → p x) ↔ (r → ∃ x, p x) := 
+  Iff.intro 
+    (fun ⟨x, h_r_imp_px⟩ => fun r => ⟨x, h_r_imp_px r⟩)
+    (fun h_r_imp_ex => Or.elim (em r) 
+      (fun hr => 
+        let ⟨x, hpx⟩ := h_r_imp_ex hr
+        ⟨x, fun _ => hpx⟩
+      )
+      (fun hnr => ⟨a, fun hr => absurd hr hnr⟩)
+    )
