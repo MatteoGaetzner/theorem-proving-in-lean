@@ -1,3 +1,9 @@
+-- Notes for 'Tactics'
+
+-- Namespacing the entire file 
+-- avoids conflicts with other notes and solutions
+namespace tactics_notes
+
 example (p q : Prop) (hp : p) (hq : q) : p ∧ q ∧ p :=
   by apply And.intro
      exact hp
@@ -232,6 +238,11 @@ example (p q : Prop) : p ∨ q → q ∨ p := by
   . apply Or.inr
     assumption
 
+example (p q : Prop) : p ∧ q → q ∧ p := by
+  intro h
+  cases h with
+  | intro hp hq => constructor; exact hq; exact hp
+
 example (p q r : Prop) : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := by
   apply Iff.intro
   . intro h
@@ -248,6 +259,7 @@ example (p q r : Prop) : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := by
     | inr hpr =>
       cases hpr with
       | intro hp hr => constructor; exact hp; apply Or.inr; exact hr
+
 
 example (p q : Nat → Prop) : (∃ x, p x) → ∃ x, p x ∨ q x := by
   intro h
@@ -519,16 +531,16 @@ example (w x y z : Nat) (p : Nat → Prop)
         (h : p (x * y + z * w * x)) : p (x * w * z + y * x) := by
   simp; simp at h; assumption
 
-def f (m n : Nat) : Nat :=
+def f_tac_0 (m n : Nat) : Nat :=
   m + n + m
 
-example {m n : Nat} (h : n = 1) (h' : 0 = m) : (f m n) = n := by
-  simp [h, ←h', f]
+example {m n : Nat} (h : n = 1) (h' : 0 = m) : (f_tac_0 m n) = n := by
+  simp [h, ←h', f_tac_0]
 
-example (f : Nat → Nat) (k : Nat) (h₁ : f 0 = 0) (h₂ : k = 0) : f k = 0 := by
+example (f_tac_0 : Nat → Nat) (k : Nat) (h₁ : f_tac_0 0 = 0) (h₂ : k = 0) : f_tac_0 k = 0 := by
   simp [h₁, h₂]
 
-example (f : Nat → Nat) (k : Nat) (h₁ : f 0 = 0) (h₂ : k = 0) : f k = 0 := by
+example (f_tac_0 : Nat → Nat) (k : Nat) (h₁ : f_tac_0 0 = 0) (h₂ : k = 0) : f_tac_0 k = 0 := by
   simp [*]
 
 example (u w x y z : Nat) (h₁ : x = y + z) (h₂ : w = u + x)
@@ -622,24 +634,24 @@ example : ∀ (x : Nat) (_h : x = 0), y + x = y := by
 example : 0 < 1 + x ∧ x + y + 2 ≥ y + 1 := by
   simp_arith
 
-def f_1 (x y z : Nat) : Nat :=
+def f_tac_1 (x y z : Nat) : Nat :=
   match x, y, z with
   | 5, _, _ => y
   | _, 5, _ => y
   | _, _, 5 => y
   | _, _, _ => 1
 
-example (x y z : Nat) : x ≠ 5 → y ≠ 5 → z ≠ 5 → z = w → f_1 x y w = 1 := by
+example (x y z : Nat) : x ≠ 5 → y ≠ 5 → z ≠ 5 → z = w → f_tac_1 x y w = 1 := by
   intros
-  simp [f_1]
+  simp [f_tac_1]
   split
   . contradiction
   . contradiction
   . contradiction
   . rfl
 
-example (x y z : Nat) : x ≠ 5 → y ≠ 5 → z ≠ 5 → z = w → f_1 x y w = 1 := by
-  intros; simp [f_1]; split <;> first | contradiction | rfl
+example (x y z : Nat) : x ≠ 5 → y ≠ 5 → z ≠ 5 → z = w → f_tac_1 x y w = 1 := by
+  intros; simp [f_tac_1]; split <;> first | contradiction | rfl
 
 def g (xs ys : List Nat) : Nat :=
   match xs, ys with
@@ -680,4 +692,4 @@ macro_rules | `(tactic| triv) => `(tactic| apply And.intro <;> triv)
 example (x : α) (h : p) : x = x ∧ p := by
   triv
 
-
+end tactics_notes

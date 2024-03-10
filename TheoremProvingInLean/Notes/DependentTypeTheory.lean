@@ -1,4 +1,9 @@
--- Simple Type Theory
+-- Notes for 'Dependent Type Theory'
+
+-- Namespacing the entire file 
+-- avoids conflicts with other notes and solutions
+namespace dependent_type_theory_notes
+
 
 /- Define some constants. -/
 
@@ -118,13 +123,13 @@ def Fp (α : Type u) : Type u := Prod α α
 #check fun (x : Nat) (y : Bool) => if not y then x + 1 else x + 2
 #check fun x y => if not y then x + 1 else x + 2   -- Nat → Bool → Nat
 
-def f (n : Nat) : String := toString n
-def g (s : String) : Bool := s.length > 1
+def f_dtt (n : Nat) : String := toString n
+def g_dtt (s : String) : Bool := s.length > 1
 
 #check fun x : Nat => x        -- Nat → Nat
 #check fun x : Nat => true     -- Nat → Bool
-#check fun x : Nat => g (f x)  -- Nat → Bool
-#check fun x => g (f x)        -- Nat → Bool
+#check fun x : Nat => g_dtt (f_dtt x)  -- Nat → Bool
+#check fun x => g_dtt (f_dtt x)        -- Nat → Bool
 
 #check fun (g : String → Bool) (f : Nat → String) (x : Nat) => g (f x)
 -- (String → Bool) → (Nat → String) → Nat → Bool
@@ -138,7 +143,7 @@ def g (s : String) : Bool := s.length > 1
 -- def g (s : String) : Bool := s.length > 0
 
 #check
-  (fun (α β γ : Type) (u : β → γ) (v : α → β) (x : α) => u (v x)) Nat String Bool g f 0
+  (fun (α β γ : Type) (u : β → γ) (v : α → β) (x : α) => u (v x)) Nat String Bool g_dtt f_dtt 0
   -- Bool
 
 #check (fun x : Nat => x) 1     -- Nat
@@ -148,10 +153,10 @@ def g (s : String) : Bool := s.length > 1
 -- def g (s : String) : Bool := s.length > 0
 
 #check
-  (fun (α β γ : Type) (u : β → γ) (v : α → β) (x : α) => u (v x)) Nat String Bool g f 0
+  (fun (α β γ : Type) (u : β → γ) (v : α → β) (x : α) => u (v x)) Nat String Bool g_dtt f_dtt 0
   -- Bool
 
-#eval g (f 1)
+#eval g_dtt (f_dtt 1)
 
 -- Definitions
 
@@ -438,3 +443,5 @@ end
 
 #check @id Nat 1
 #check @id Bool true
+
+end dependent_type_theory_notes

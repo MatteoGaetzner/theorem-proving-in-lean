@@ -4,7 +4,7 @@ open Lake DSL
 package «theorem-proving-in-lean» where
   -- add package configuration options here
 
-lean_lib «TheoremProvingInLean» where
+lean_lib TheoremProvingInLean where
   -- add library configuration options here
 
 @[default_target]
